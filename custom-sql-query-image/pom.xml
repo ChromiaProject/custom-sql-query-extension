@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>net.postchain</groupId>
+        <artifactId>custom-sql-query-extension</artifactId>
+        <version>${revision}</version>
+    </parent>
+
+    <artifactId>custom-sql-query-image</artifactId>
+
+    <properties>
+        <image.name>chromaway/custom-sql-query-extension</image.name>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>net.postchain</groupId>
+            <artifactId>custom-sql-query-gtxmodule</artifactId>
+            <version>${revision}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>pl.project13.maven</groupId>
+                <artifactId>git-commit-id-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>get-the-git-infos</id>
+                        <goals>
+                            <goal>revision</goal>
+                        </goals>
+                        <phase>initialize</phase>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>com.google.cloud.tools</groupId>
+                <artifactId>jib-maven-plugin</artifactId>
+                <configuration>
+                    <allowInsecureRegistries>false</allowInsecureRegistries>
+                    <from>
+                        <image>registry.gitlab.com/chromaway/postchain-chromia/chromaway/chromia-subnode:3.16.22@sha256:5a6c9921e226ae70f8af1971e7d29ed16480bd8200b563fc1093f156c5dc9013</image>
+                    </from>
+                    <container>
+                        <appRoot>/opt/chromaway/postchain</appRoot>
+                        <entrypoint>INHERIT</entrypoint>
+                        <creationTime>${git.commit.time}</creationTime>
+                        <filesModificationTime>${git.commit.time}</filesModificationTime>
+                    </container>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

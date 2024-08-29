@@ -16,6 +16,12 @@
     <name>Custom SQL query extension</name>
     <url>https://docs.chromia.com/</url>
 
+    <modules>
+        <module>custom-sql-query-gtxmodule</module>
+        <module>custom-sql-query-image</module>
+    </modules>
+    <packaging>pom</packaging>
+
     <properties>
         <revision>dev</revision>
         <postchain.version>3.17.8</postchain.version>
@@ -26,6 +32,14 @@
         <kotlin.compiler.jvmTarget>21</kotlin.compiler.jvmTarget>
 
         <kotlin.code.style>obsolete</kotlin.code.style> <!-- Kotlin obsolete IntelliJ IDEA codestyle -->
+
+        <!--suppress UnresolvedMavenProperty -->
+        <gitlab.username>${CI_REGISTRY_USER}</gitlab.username>
+        <!--suppress UnresolvedMavenProperty -->
+        <gitlab.password>${CI_REGISTRY_PASSWORD}</gitlab.password>
+        <gitlab.registry>registry.gitlab.com/chromaway/core/custom-sql-query-extension</gitlab.registry>
+        <docker.cache>/tmp/docker-cache</docker.cache>
+        <image.platforms>linux/amd64,linux/arm64</image.platforms>
     </properties>
 
     <dependencyManagement>
@@ -54,59 +68,54 @@
         </dependencies>
     </dependencyManagement>
 
-    <dependencies>
-        <dependency>
-            <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-stdlib</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>io.github.microutils</groupId>
-            <artifactId>kotlin-logging-jvm</artifactId>
-        </dependency>
-
-        <!-- Postchain -->
-        <dependency>
-            <groupId>net.postchain</groupId>
-            <artifactId>postchain-base</artifactId>
-        </dependency>
-
-        <!-- We want access to integration test setup classes -->
-        <!--
-        <dependency>
-            <groupId>net.postchain</groupId>
-            <artifactId>postchain-base</artifactId>
-            <version>${postchain.version}</version>
-            <type>test-jar</type>
-            <scope>test</scope>
-        </dependency>
-        -->
-        
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.willowtreeapps.assertk</groupId>
-            <artifactId>assertk-jvm</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.mockito.kotlin</groupId>
-            <artifactId>mockito-kotlin</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
-
     <build>
         <sourceDirectory>src/main/kotlin</sourceDirectory>
         <testSourceDirectory>src/test/kotlin</testSourceDirectory>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.jetbrains.kotlin</groupId>
+                    <artifactId>kotlin-maven-plugin</artifactId>
+                    <version>${kotlin.version}</version>
+                    <executions>
+                        <execution>
+                            <id>compile</id>
+                            <goals>
+                                <goal>compile</goal>
+                            </goals>
+                        </execution>
+
+                        <execution>
+                            <id>test-compile</id>
+                            <goals>
+                                <goal>test-compile</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>com.google.cloud.tools</groupId>
+                    <artifactId>jib-maven-plugin</artifactId>
+                    <version>3.4.3</version>
+                    <configuration>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>docker-build</id>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>dockerBuild</goal>
+                            </goals>
+                            <configuration>
+                                <to>
+                                    <image>${image.name}</image>
+                                </to>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
         <plugins>
             <plugin>
                 <groupId>org.jetbrains.kotlin</groupId>
@@ -159,30 +168,6 @@
                 </executions>
             </plugin>
         </plugins>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>org.jetbrains.kotlin</groupId>
-                    <artifactId>kotlin-maven-plugin</artifactId>
-                    <version>${kotlin.version}</version>
-                    <executions>
-                        <execution>
-                            <id>compile</id>
-                            <goals>
-                                <goal>compile</goal>
-                            </goals>
-                        </execution>
-
-                        <execution>
-                            <id>test-compile</id>
-                            <goals>
-                                <goal>test-compile</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
-            </plugins>
-        </pluginManagement>
     </build>
 
     <repositories>
