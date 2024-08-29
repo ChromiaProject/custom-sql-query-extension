@@ -5,6 +5,7 @@ include:
     file:
       - templates/release.yml
       - templates/maven-dependency-scanning.yml
+      - templates/container-dependency-scanning.yml
 
 .setup:
   tags:
@@ -32,8 +33,8 @@ include:
       - "**/*.log"
     reports:
       junit:
-        - "target/surefire-reports/TEST-*.xml"
-        - "target/failsafe-reports/TEST-*.xml"
+        - "*/target/surefire-reports/TEST-*.xml"
+        - "*/target/failsafe-reports/TEST-*.xml"
     expire_in: 1 week
 
 stages:
@@ -102,6 +103,17 @@ dependency-check:
   extends: .maven-dependency-check
   stage: dependency-check
   interruptible: true
+  only:
+    variables:
+      - $RUN_DEPENDENCY_CHECK == "true"
+
+container-scanning:
+  variables:
+    REGISTRY: registry.gitlab.com/chromaway/core/custom-sql-query-extension
+  parallel:
+    matrix:
+      - IMAGE: [ chromaway/custom-sql-query-extension ]
+        VERSION: [ LATEST, LATEST_SNAPSHOT ]
   only:
     variables:
       - $RUN_DEPENDENCY_CHECK == "true"
