@@ -22,10 +22,23 @@
             <artifactId>kotlin-logging-jvm</artifactId>
         </dependency>
 
-        <!-- Postchain -->
         <dependency>
             <groupId>net.postchain</groupId>
             <artifactId>postchain-base</artifactId>
+            <!-- Only to avoid multiple versions in docker image! Remove when we find a better way to extend -->
+            <exclusions>
+                <exclusion>
+                    <groupId>org.mandas</groupId>
+                    <artifactId>docker-client</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!-- Only to avoid multiple versions in docker image! Remove when we find a better way to extend -->
+        <dependency>
+            <groupId>org.java-websocket</groupId>
+            <artifactId>Java-WebSocket</artifactId>
+            <version>1.5.6</version>
         </dependency>
 
         <!-- We want access to integration test setup classes -->
