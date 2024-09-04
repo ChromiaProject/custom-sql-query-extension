@@ -21,44 +21,31 @@
             <groupId>io.github.microutils</groupId>
             <artifactId>kotlin-logging-jvm</artifactId>
         </dependency>
+        <dependency>
+            <groupId>commons-dbutils</groupId>
+            <artifactId>commons-dbutils</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>net.postchain</groupId>
+            <artifactId>postchain-spi</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>net.postchain</groupId>
             <artifactId>postchain-base</artifactId>
-            <!-- Only to avoid multiple versions in docker image! Remove when we find a better way to extend -->
-            <exclusions>
-                <exclusion>
-                    <groupId>org.mandas</groupId>
-                    <artifactId>docker-client</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
-        <!-- Only to avoid multiple versions in docker image! Remove when we find a better way to extend -->
-        <dependency>
-            <groupId>org.java-websocket</groupId>
-            <artifactId>Java-WebSocket</artifactId>
-            <version>1.5.6</version>
-        </dependency>
-
-        <!-- Only to avoid multiple versions in docker image! Remove when we find a better way to extend -->
-        <dependency>
-          <groupId>com.fasterxml.jackson.core</groupId>
-          <artifactId>jackson-annotations</artifactId>
-          <version>2.17.0</version>
+            <scope>test</scope>
         </dependency>
 
         <!-- We want access to integration test setup classes -->
-        <!--
         <dependency>
             <groupId>net.postchain</groupId>
-            <artifactId>postchain-base</artifactId>
+            <artifactId>postchain-spi</artifactId>
             <version>${postchain.version}</version>
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>
-        -->
-        
+
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
