@@ -11,10 +11,6 @@
 
     <artifactId>custom-sql-query-image</artifactId>
 
-    <properties>
-        <image.name>chromaway/custom-sql-query-extension</image.name>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>net.postchain</groupId>
