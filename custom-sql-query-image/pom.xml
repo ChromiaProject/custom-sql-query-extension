@@ -11,10 +11,6 @@
 
     <artifactId>custom-sql-query-image</artifactId>
 
-    <properties>
-        <image.name>chromaway/custom-sql-query-extension</image.name>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>net.postchain</groupId>
@@ -45,7 +41,7 @@
                     <allowInsecureRegistries>false</allowInsecureRegistries>
                     <from>
                         <image>
-                            registry.gitlab.com/chromaway/postchain-chromia/chromaway/chromia-subnode:3.16.23@sha256:c214dbe81c52a463c3829b6c7b55f99086c596d843ec27a0cf7884309bb4fff9
+                            registry.gitlab.com/chromaway/postchain-chromia/chromaway/chromia-subnode:3.17.0@sha256:f9d19e2d9df2d3e80d50eb3ddfa90baf601cc25e53ffa7faef88133a117b889e
                         </image>
                     </from>
                     <container>
