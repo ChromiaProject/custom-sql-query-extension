@@ -2,7 +2,6 @@ package net.postchain.gtx.extensions.customsqlquery
 
 import mu.KotlinLogging
 import net.postchain.base.BaseBlockBuilderExtension
-import net.postchain.base.configuration.KEY_GTX
 import net.postchain.common.BlockchainRid
 import net.postchain.common.exception.ProgrammerMistake
 import net.postchain.common.exception.UserMistake
@@ -51,7 +50,7 @@ enum class ArgType {
 @Suppress("unused")
 class CustomSQLQueryGTXModuleFactory : GTXModuleFactory {
     override fun makeModule(config: Gtv, blockchainRID: BlockchainRid): GTXModule {
-        val sqlQueryConfig = config.asDict()[KEY_GTX]!!.asDict()["customsqlquery"]!!.toObject<CustomSQLQueryConfig>()
+        val sqlQueryConfig = config.asDict()["customsqlquery"]!!.toObject<CustomSQLQueryConfig>()
         val queries = sqlQueryConfig.queries.mapValues { (_, query) -> resolveArgs(query) }
         return CustomSQLQueryGTXModule(queries)
     }

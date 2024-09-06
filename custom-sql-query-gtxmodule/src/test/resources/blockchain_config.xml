@@ -7,27 +7,27 @@
                     <string>net.postchain.gtx.extensions.customsqlquery.CustomSQLQueryGTXModuleFactory</string>
                 </array>
             </entry>
-            <entry key="customsqlquery">
+        </dict>
+    </entry>
+    <entry key="customsqlquery">
+        <dict>
+            <entry key="queries">
                 <dict>
-                    <entry key="queries">
-                        <dict>
-                            <entry key="query1">
-                                <string>
-                                    SELECT col1, col2, col3, col4, col5
-                                    FROM [table:bogus]
-                                    WHERE col1 = :arg1:text: AND col2 = :arg2:integer: AND col3 = :arg3:big_integer: AND
-                                    col4 = :arg4:byte_array:
-                                </string>
-                            </entry>
-                            <entry key="query2">
-                                <string>
-                                    SELECT col1, col2, col3, col4, col5
-                                    FROM [table:my_entity]
-                                    WHERE col1 = :arg1:text: AND col2 = :arg2:integer: AND col3 = :arg3:big_integer: AND
-                                    col4 = :arg4:byte_array:
-                                </string>
-                            </entry>
-                        </dict>
+                    <entry key="query1">
+                        <string>
+                            SELECT col1, col2, col3, col4, col5
+                            FROM [table:bogus]
+                            WHERE col1 = :arg1:text: AND col2 = :arg2:integer: AND col3 = :arg3:big_integer: AND
+                            col4 = :arg4:byte_array:
+                        </string>
+                    </entry>
+                    <entry key="query2">
+                        <string>
+                            SELECT col1, col2, col3, col4, col5
+                            FROM [table:my_entity]
+                            WHERE col1 = :arg1:text: AND col2 = :arg2:integer: AND col3 = :arg3:big_integer: AND
+                            col4 = :arg4:byte_array:
+                        </string>
                     </entry>
                 </dict>
             </entry>

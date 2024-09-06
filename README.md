@@ -5,6 +5,7 @@ This Postchain extension provides an GTX module which can make custom SQL querie
 Enable and configure it by putting this into blockchain config:
 
 ```xml
+<dict>
     <entry key="gtx">
         <dict>
             <entry key="modules">
@@ -12,33 +13,33 @@ Enable and configure it by putting this into blockchain config:
                     <string>net.postchain.gtx.extensions.customsqlquery.CustomSQLQueryGTXModuleFactory</string>
                 </array>
             </entry>
-            <entry key="customsqlquery">
+        </dict>
+    </entry>
+    <entry key="customsqlquery">
+        <dict>
+            <entry key="queries">
                 <dict>
-                    <entry key="queries">
-                        <dict>
-                            <entry key="query1">
-                                <string>
-                                    SELECT col1, col2, col3, col4, col5
-                                    FROM [table:my_entity]
-                                    WHERE col1 = :arg1:text: AND col2 = :arg2:integer: AND col3 = :arg3:big_integer: AND
-                                    col4 = :arg4:byte_array:
-                                </string>
-                            </entry>
-                            <entry key="query2">
-                                <string>
-                                    SELECT col1, col2, col3, col4, col5
-                                    FROM [table:other.entity1],[table:other.entity2]
-                                    WHERE col1 = :arg1:text: AND col2 = :arg2:integer: AND col3 = :arg3:big_integer: AND
-                                    col4 = :arg4:byte_array:
-                                </string>
-                            </entry>
-                        </dict>
+                    <entry key="query1">
+                        <string>
+                            SELECT col1, col2, col3, col4, col5
+                            FROM [table:my_entity]
+                            WHERE col1 = :arg1:text: AND col2 = :arg2:integer: AND col3 = :arg3:big_integer: AND
+                            col4 = :arg4:byte_array:
+                        </string>
+                    </entry>
+                    <entry key="query2">
+                        <string>
+                            SELECT col1, col2, col3, col4, col5
+                            FROM [table:other.entity1],[table:other.entity2]
+                            WHERE col1 = :arg1:text: AND col2 = :arg2:integer: AND col3 = :arg3:big_integer: AND
+                            col4 = :arg4:byte_array:
+                        </string>
                     </entry>
                 </dict>
             </entry>
         </dict>
     </entry>
-
+</dict>
 ```
 
 To access the tables of Rell entities and objects, use the syntax `[table:mount_name]`, which will be replaced with the
