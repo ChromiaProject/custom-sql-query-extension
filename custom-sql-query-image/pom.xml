@@ -41,7 +41,7 @@
                     <allowInsecureRegistries>false</allowInsecureRegistries>
                     <from>
                         <image>
-                            registry.gitlab.com/chromaway/postchain-chromia/chromaway/chromia-subnode:3.18.0@sha256:d697cd78b3ff52c83a6d2302d4f3296bd20cd21d48db9a148352fe36bf41e7bb
+                            registry.gitlab.com/chromaway/postchain-chromia/chromaway/chromia-subnode:3.22.3@sha256:700c7e8139f0446b797ea97c29fbd3f3233f5c8094112150324ffc6ceb33136d
                         </image>
                     </from>
                     <container>
