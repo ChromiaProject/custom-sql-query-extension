@@ -7,7 +7,7 @@ This Postchain extension provides an GTX module which can make custom SQL querie
 ```shell
 pmc subnode-image add --name custom_sql_query \
   --url registry.gitlab.com/chromaway/core/custom-sql-query-extension/chromaway/custom-sql-query-extension \
-  --digest sha256:5fb87d78a5470214f189f3046706b7ef0e98fa162b99e1ee486734e1db2c3345 \
+  --digest ${DIGEST} \
   --image-description "Custom SQL query" \
   -gtx net.postchain.gtx.extensions.customsqlquery.CustomSQLQueryGTXModuleFactory
 ```
