@@ -15,9 +15,15 @@ import net.postchain.gtv.GtvDictionary
 import net.postchain.gtv.GtvInteger
 import net.postchain.gtv.GtvNull
 import net.postchain.gtv.GtvString
+import net.postchain.gtv.GtvType
 import net.postchain.gtv.mapper.toObject
+import net.postchain.gtx.ArgumentMetadata
 import net.postchain.gtx.GTXModule
 import net.postchain.gtx.GTXModuleFactory
+import net.postchain.gtx.GTXModuleMetadata
+import net.postchain.gtx.MetadataProvider
+import net.postchain.gtx.QueryMetadata
+import net.postchain.gtx.ReturnMetadata
 import net.postchain.gtx.data.ExtOpData
 import net.postchain.gtx.special.GTXSpecialTxExtension
 import org.apache.commons.dbutils.QueryRunner
@@ -49,7 +55,7 @@ enum class ArgType {
 
 @Suppress("unused")
 class CustomSQLQueryGTXModuleFactory : GTXModuleFactory {
-    override fun makeModule(config: Gtv, blockchainRID: BlockchainRid): GTXModule {
+    override fun makeModule(config: Gtv, blockchainRID: BlockchainRid): CustomSQLQueryGTXModule {
         val sqlQueryConfig = config.asDict()["customsqlquery"]!!.toObject<CustomSQLQueryConfig>()
         val queries = sqlQueryConfig.queries.mapValues { (_, query) -> resolveArgs(query) }
         return CustomSQLQueryGTXModule(queries)
@@ -66,13 +72,13 @@ internal fun resolveArgs(sql: String): QueryDef {
         val typeName = it.groups["type"]!!.value
         ArgDef(name, try {
             ArgType.valueOf(typeName)
-        } catch (e: IllegalArgumentException) {
+        } catch (_: IllegalArgumentException) {
             throw UserMistake("Unknown argument type: $typeName")
         })
     }.toList(), resolvedSql)
 }
 
-class CustomSQLQueryGTXModule(private val queries: Map<String, QueryDef>) : GTXModule {
+class CustomSQLQueryGTXModule(private val queries: Map<String, QueryDef>) : GTXModule, MetadataProvider {
     private val queryRunner = QueryRunner()
 
     override fun getSpecialTxExtensions(): List<GTXSpecialTxExtension> = listOf()
@@ -84,6 +90,25 @@ class CustomSQLQueryGTXModule(private val queries: Map<String, QueryDef>) : GTXM
     override fun getQueries(): Set<String> = queries.keys
 
     override fun initializeDB(ctx: EContext) {}
+
+    override fun getMetadata() = GTXModuleMetadata(
+            operations = mapOf(),
+            queries = queries.mapValues {
+                QueryMetadata(
+                        args = it.value.args.map { arg ->
+                            ArgumentMetadata(
+                                    name = arg.name,
+                                    gtvTypes = setOf(when (arg.type) {
+                                        ArgType.integer -> GtvType.INTEGER
+                                        ArgType.big_integer -> GtvType.BIGINTEGER
+                                        ArgType.text -> GtvType.STRING
+                                        ArgType.byte_array -> GtvType.BYTEARRAY
+                                    })
+                            )
+                        },
+                        returnType = ReturnMetadata(gtvTypes = setOf(GtvType.ARRAY)))
+            }
+    )
 
     override fun makeTransactor(opData: ExtOpData): Transactor {
         throw UserMistake("Operation not found")
@@ -117,8 +142,8 @@ class CustomSQLQueryGTXModule(private val queries: Map<String, QueryDef>) : GTXM
 
         return GtvArray(queryResult.map {
             val obj = buildMap {
-                it.entries.forEach {
-                    val gtv = when (val dbValue = it.value) {
+                it.entries.forEach { entry ->
+                    val gtv = when (val dbValue = entry.value) {
                         is Int, is Long -> GtvInteger((dbValue as Number).toLong())
                         is BigInteger -> GtvBigInteger(dbValue)
                         is BigDecimal -> GtvBigInteger(dbValue.toBigIntegerExact())
@@ -126,10 +151,10 @@ class CustomSQLQueryGTXModule(private val queries: Map<String, QueryDef>) : GTXM
                         is ByteArray -> GtvByteArray(dbValue)
                         null -> GtvNull
                         else -> throw ProgrammerMistake("Unsupported return type" +
-                                " ${dbValue.javaClass.simpleName} of column ${it.key} " +
+                                " ${dbValue.javaClass.simpleName} of column ${entry.key} " +
                                 "from query $name")
                     }
-                    set(it.key, gtv)
+                    set(entry.key, gtv)
                 }
             }
             GtvDictionary.build(obj)

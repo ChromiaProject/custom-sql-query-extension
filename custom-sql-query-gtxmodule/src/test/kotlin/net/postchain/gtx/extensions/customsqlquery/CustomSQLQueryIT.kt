@@ -17,7 +17,12 @@ import net.postchain.common.exception.UserMistake
 import net.postchain.common.hexStringToByteArray
 import net.postchain.config.app.AppConfig
 import net.postchain.gtv.GtvFactory.gtv
+import net.postchain.gtv.GtvType
 import net.postchain.gtv.gtvml.GtvMLParser
+import net.postchain.gtx.ArgumentMetadata
+import net.postchain.gtx.GTXModuleMetadata
+import net.postchain.gtx.QueryMetadata
+import net.postchain.gtx.ReturnMetadata
 import org.apache.commons.dbutils.QueryRunner
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -59,6 +64,51 @@ internal class CustomSQLQueryIT {
             val config = GtvMLParser.parseGtvML(javaClass.getResource("/blockchain_config.xml")!!.readText(Charsets.UTF_8))
             val moduleFactory = CustomSQLQueryGTXModuleFactory()
             val module = moduleFactory.makeModule(config, blockchainRid)
+
+            assertThat(module.getMetadata()).isEqualTo(GTXModuleMetadata(
+                    operations = mapOf(),
+                    queries = mapOf(
+                            "query1" to QueryMetadata(
+                                    args = listOf(
+                                            ArgumentMetadata(
+                                                    name = "arg1",
+                                                    gtvTypes = setOf(GtvType.STRING)
+                                            ),
+                                            ArgumentMetadata(
+                                                    name = "arg2",
+                                                    gtvTypes = setOf(GtvType.INTEGER)
+                                            ),
+                                            ArgumentMetadata(
+                                                    name = "arg3",
+                                                    gtvTypes = setOf(GtvType.BIGINTEGER)
+                                            ),
+                                            ArgumentMetadata(
+                                                    name = "arg4",
+                                                    gtvTypes = setOf(GtvType.BYTEARRAY)
+                                            ),
+                                    ),
+                                    returnType = ReturnMetadata(gtvTypes = setOf(GtvType.ARRAY))),
+                            "query2" to QueryMetadata(
+                                    args = listOf(
+                                            ArgumentMetadata(
+                                                    name = "arg1",
+                                                    gtvTypes = setOf(GtvType.STRING)
+                                            ),
+                                            ArgumentMetadata(
+                                                    name = "arg2",
+                                                    gtvTypes = setOf(GtvType.INTEGER)
+                                            ),
+                                            ArgumentMetadata(
+                                                    name = "arg3",
+                                                    gtvTypes = setOf(GtvType.BIGINTEGER)
+                                            ),
+                                            ArgumentMetadata(
+                                                    name = "arg4",
+                                                    gtvTypes = setOf(GtvType.BYTEARRAY)
+                                            ),
+                                    ),
+                                    returnType = ReturnMetadata(gtvTypes = setOf(GtvType.ARRAY))),
+                    )))
 
             assertThat(module.getQueries()).isEqualTo(setOf("query1", "query2"))
 
