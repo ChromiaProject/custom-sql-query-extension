@@ -24,8 +24,8 @@
 
     <properties>
         <revision>dev</revision>
-        <postchain.version>3.42.0</postchain.version>
-        <kotlin.version>2.0.0</kotlin.version>
+        <postchain.version>3.47.3</postchain.version>
+        <kotlin.version>2.3.0</kotlin.version>
 
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
@@ -189,4 +189,22 @@
         </repository>
     </repositories>
 
+    <profiles>
+        <profile>
+            <id>ci</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.jetbrains.kotlin</groupId>
+                        <artifactId>kotlin-maven-plugin</artifactId>
+                        <configuration>
+                            <args>
+                                <arg>-Werror</arg>
+                            </args>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
