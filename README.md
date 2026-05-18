@@ -50,3 +50,21 @@ Arguments are specified using the syntax `:arg_name:type:` where type can be one
 * byte_array
 
 The response of queries will be an array of dictionaries representing the SQL result set.
+
+## Updating the `chromia-subnode` base image
+
+The base image is pinned by both tag and digest in `custom-sql-query-image/pom.xml` (the `<from><image>` element of the `jib-maven-plugin` configuration). The digest pin ensures reproducible builds; the version tag is kept alongside it for human readability.
+
+To bump the base image (replace `<NEW_VERSION>` with the target tag):
+
+```shell
+docker pull registry.gitlab.com/chromaway/postchain-chromia/chromaway/chromia-subnode:<NEW_VERSION>
+docker inspect --format='{{index .RepoDigests 0}}' \
+  registry.gitlab.com/chromaway/postchain-chromia/chromaway/chromia-subnode:<NEW_VERSION>
+```
+
+Copy the resulting `sha256:…` digest and update the `<image>` line in `custom-sql-query-image/pom.xml` to:
+
+```
+registry.gitlab.com/chromaway/postchain-chromia/chromaway/chromia-subnode:<NEW_VERSION>@<DIGEST>
+```
