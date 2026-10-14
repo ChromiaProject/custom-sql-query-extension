@@ -7,7 +7,7 @@
     <parent>
         <groupId>com.chromia</groupId>
         <artifactId>chromia-parent</artifactId>
-        <version>0.2.6</version>
+        <version>0.3.0</version>
     </parent>
 
     <groupId>net.postchain</groupId>
@@ -24,7 +24,7 @@
 
     <properties>
         <revision>dev</revision>
-        <postchain.version>3.49.11</postchain.version>
+        <postchain.version>3.49.22</postchain.version>
         <kotlin.version>2.3.0</kotlin.version>
 
         <maven.compiler.source>21</maven.compiler.source>
@@ -97,7 +97,7 @@
                 <plugin>
                     <groupId>com.google.cloud.tools</groupId>
                     <artifactId>jib-maven-plugin</artifactId>
-                    <version>3.4.3</version>
+                    <version>3.5.2</version>
                     <configuration>
                         <to>
                             <image>${image.name}</image>
